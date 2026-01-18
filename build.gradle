@@ -7,6 +7,8 @@ group = 'com.dnocturne'
 version = '1.0.0'
 
 def paperVersion = '1.21.11-R0.1-SNAPSHOT'
+def mockBukkitVersion = '4.100.0'
+def junitVersion = '6.0.2'
 
 java {
     toolchain {
@@ -30,6 +32,17 @@ dependencies {
 
     // JetBrains annotations for @NotNull, @Nullable
     compileOnly 'org.jetbrains:annotations:24.1.0'
+
+    // Testing
+    testImplementation "io.papermc.paper:paper-api:${paperVersion}"
+    testImplementation "org.mockbukkit.mockbukkit:mockbukkit-v1.21:${mockBukkitVersion}"
+    testImplementation platform("org.junit:junit-bom:${junitVersion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 // Publish to Maven Local for use by other projects
@@ -48,4 +61,9 @@ publishing {
 
 javadoc {
     options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+// Ensure tests pass before publishing
+tasks.named('publishToMavenLocal') {
+    dependsOn test
 }
