@@ -28,12 +28,17 @@ Type-safe registration for game objects:
 
 ### Player Management
 - `PlayerManager<T>` - Tracks per-player state with filtering and caching
-- `PlayerData` - Interface for persistable player data
 
 ### Storage
 Persistence layer for player data:
-- `Storage<T>` - Generic storage interface
-- `AbstractSqlStorage<T>` - Base SQL implementation
+- `Storage<T>` - Generic async storage interface (load, save, delete, exists, loadByName)
+- `AbstractSqlStorage<T>` - Base SQL implementation with:
+  - Virtual thread executor for non-blocking I/O
+  - Transaction support via `executeInTransaction()`
+  - Two usage patterns:
+    - **Simple**: Override SQL getters and serialization methods for single-table schemas
+    - **Complex**: Override sync methods (`loadSync`, `saveSync`, etc.) for multi-table schemas
+- `PlayerData` - Interface for persistable player data (getUuid, getUsername)
 
 ### Utilities
 - `TimeUtil` - Minecraft time/moon phase calculations
