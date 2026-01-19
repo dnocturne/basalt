@@ -233,6 +233,32 @@ public class ConfigManager {
     }
 
     /**
+     * Load a config from a subdirectory without versioning.
+     *
+     * <p>Use this for user-created data files that don't require automatic updates
+     * from plugin defaults (e.g., custom curse configurations).</p>
+     *
+     * @param subdirectory The subdirectory name (e.g., "afflictions")
+     * @param configId     The config identifier (e.g., "curse_weakness")
+     * @return The loaded YamlDocument
+     * @throws IOException If loading fails
+     */
+    public @NotNull YamlDocument loadSubdirectoryDataFile(@NotNull String subdirectory, @NotNull String configId) throws IOException {
+        String fileName = subdirectory + "/" + configId + ".yml";
+        File file = new File(plugin.getDataFolder(), fileName);
+
+        YamlDocument doc = YamlDocument.create(
+                file,
+                GeneralSettings.DEFAULT,
+                LoaderSettings.DEFAULT,
+                DumperSettings.DEFAULT,
+                UpdaterSettings.DEFAULT
+        );
+        configs.put(subdirectory + ":" + configId, doc);
+        return doc;
+    }
+
+    /**
      * Get the plugin instance.
      */
     public @NotNull Plugin getPlugin() {
